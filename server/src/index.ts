@@ -15,4 +15,12 @@ app.get("/", (req, res) => {
     res.send("Hello");
 });
 
+io.on("connection", (socket) => {
+    console.log("New connection");
+
+    socket.on("disconnect", () => {
+        console.log("User has left");
+    });
+});
+
 server.listen(port, () => console.log(`Server is running at ${port}`));

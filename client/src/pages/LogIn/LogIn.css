@@ -1,0 +1,29 @@
+.LogIn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2rem 2.5rem;
+    border-radius: 8px !important;
+}
+
+.LogIn__logo {
+    height: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.LogIn__container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.LogIn__textField {
+    width: 15rem !important;
+    margin-top: 1rem !important;
+}
+
+.LogIn__button {
+    margin-top: 2rem !important;
+    width: 100% !important;
+}
