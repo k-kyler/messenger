@@ -14,30 +14,31 @@ const LogIn: FC = () => {
     const [buttonState, setButtonState] = useState(true);
 
     const usernameInputHandler = (value: string) => {
+        if (username && room) setButtonState(false);
         if (value) {
             setErrorUsername(false);
             setErrorUsernameText("");
             setUsername(value);
         } else {
+            setUsername("");
             setErrorUsernameText("Username must be filled");
             setErrorUsername(true);
+            setButtonState(true);
         }
     };
 
     const roomInputHandler = (value: string) => {
+        if (username && room) setButtonState(false);
         if (value) {
             setErrorRoom(false);
             setErrorRoomText("");
             setRoom(value);
         } else {
+            setRoom("");
             setErrorRoomText("Room must be filled");
             setErrorRoom(true);
+            setButtonState(true);
         }
-    };
-
-    const buttonStateHandler = () => {
-        if (username && room) setButtonState(false);
-        setButtonState(true);
     };
 
     return (
@@ -82,7 +83,7 @@ const LogIn: FC = () => {
                         color="primary"
                         variant="contained"
                         component={Link}
-                        to={`/chatarea?username=${username}&room=${room}`}
+                        to={`/chatarea/${username}/${room}`}
                     >
                         Log In
                     </Button>

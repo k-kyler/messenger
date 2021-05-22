@@ -9,7 +9,10 @@ function App() {
             <Router>
                 <Switch>
                     <Route exact path="/" component={LogIn} />
-                    <Route path="/chatarea" component={ChatArea} />
+                    <Route
+                        path="/chatarea/:username/:room"
+                        component={ChatArea}
+                    />
                 </Switch>
             </Router>
         </div>

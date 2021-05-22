@@ -5,7 +5,12 @@ var http = require("http");
 var port = process.env.PORT || 5000;
 var app = express();
 var server = http.createServer(app);
-var io = socketio(server);
+var io = socketio(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+    },
+});
 app.use(cors());
 app.use(express.json());
 app.get("/", function (req, res) {
