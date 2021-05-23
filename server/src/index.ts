@@ -1,7 +1,31 @@
+type usersMethodsTypes = {
+    getUser;
+    getUsersInRoom;
+    addUser;
+    deleteUser;
+};
+
+type addUserType = {
+    user: {
+        id: string;
+        username: string;
+        room: string;
+    };
+    error: string;
+};
+
+type userType = {
+    id: string;
+    username: string;
+    room: string;
+};
+
 const express = require("express");
 const cors = require("cors");
 const socketio = require("socket.io");
 const http = require("http");
+const routes = require("./routes");
+const usersMethods: usersMethodsTypes = require("./users");
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -15,13 +39,41 @@ const io = socketio(server, {
 
 app.use(cors());
 app.use(express.json());
-
-app.get("/", (req, res) => {
-    res.send("Hello");
-});
+app.use(routes);
 
 io.on("connection", (socket) => {
-    console.log("New connection");
+    socket.on("Join room", ({ username, room }, callback) => {
+        const { user, error }: addUserType = usersMethods.addUser({
+            id: socket.id,
+            username,
+            room,
+        });
+
+        if (error) return callback(error);
+
+        socket.join(user.room);
+        socket.emit("Chatbot message", {
+            username: "Chatbot",
+            text: `Hi ${user.username}, welcome to room ${user.room}`,
+        });
+        socket.broadcast.to(user.room).emit("Chatbot message", {
+            username: "Chatbot",
+            text: `${user.username} has joined the room`,
+        });
+
+        callback();
+    });
+
+    socket.on("Send message", (message: string, callback) => {
+        const user: userType = usersMethods.getUser(socket.id);
+
+        io.to(user.room).emit("Client message", {
+            username: user.username,
+            text: message,
+        });
+
+        callback();
+    });
 
     socket.on("disconnect", () => {
         console.log("User has left");

@@ -4,6 +4,5 @@
         "rootDir": "./src",
         "outDir": "./"
     },
-    "include": ["src"],
-    "exclude": ["../src"]
+    "files": ["./src/index.ts", "./src/users.ts", "./src/routes.ts"]
 }
