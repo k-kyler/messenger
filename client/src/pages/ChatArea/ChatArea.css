@@ -1,0 +1,41 @@
+.chatArea {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 33rem;
+    height: 33rem;
+    color: white !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatArea__header {
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(0, 132, 255);
+}
+
+.chatArea__header > .MuiButtonBase-root {
+    color: white !important;
+}
+
+.chatArea__room {
+    display: flex;
+    align-items: center;
+}
+
+.chatArea__room > p {
+    margin-left: 0.5rem !important;
+    font-weight: 600 !important;
+}
+
+.chatArea__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: black !important;
+}

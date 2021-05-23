@@ -83,7 +83,7 @@ const LogIn: FC = () => {
                         color="primary"
                         variant="contained"
                         component={Link}
-                        to={`/chatarea/${username}/${room}`}
+                        to={`/chat/${username}/${room}`}
                     >
                         Log In
                     </Button>

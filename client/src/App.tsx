@@ -1,5 +1,9 @@
-import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect,
+} from "react-router-dom";
 import LogIn from "./pages/LogIn/LogIn";
 import ChatArea from "./pages/ChatArea/ChatArea";
 
@@ -10,9 +14,11 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={LogIn} />
                     <Route
-                        path="/chatarea/:username/:room"
+                        exact
+                        path="/chat/:username/:room"
                         component={ChatArea}
                     />
+                    <Redirect to="/" />
                 </Switch>
             </Router>
         </div>
