@@ -15,6 +15,8 @@ import ForumIcon from "@material-ui/icons/Forum";
 import CloseIcon from "@material-ui/icons/Close";
 import RedditIcon from "@material-ui/icons/Reddit";
 import SendIcon from "@material-ui/icons/Send";
+import Message from "../../components/Message/Message";
+import FlipMove from "react-flip-move";
 
 interface IChatArea {
     match: {
@@ -54,7 +56,6 @@ let socket: any;
 const ChatArea: FC<IChatArea> = ({ match }) => {
     const [room, setRoom] = useState("");
     const [username, setUsername] = useState("");
-    const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([{}]);
     const [input, setInput] = useState("");
 
@@ -67,7 +68,9 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     const sendMessageHandler = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        setInput("");
+        if (input) {
+            socket.emit("Send message", input, () => setInput(""));
+        }
     };
 
     useEffect(() => {
@@ -77,10 +80,14 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
         setRoom(room);
 
         socket = io(SERVER_URL);
-        socket.emit("Join room", {
-            username,
-            room,
-        });
+        socket.emit(
+            "Join room",
+            {
+                username,
+                room,
+            },
+            () => {}
+        );
 
         return () => {
             socket.emit("disconnect");
@@ -89,7 +96,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     }, [SERVER_URL, match.params]);
 
     useEffect(() => {
-        socket.on("Chatbot message", (message: messageType) => {
+        socket.on("Render message", (message: messageType) => {
             setMessages([...messages, message]);
         });
     }, [messages]);
@@ -106,7 +113,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                         }}
                         variant="dot"
                     >
-                        <Avatar>
+                        <Avatar className="chatArea__roomIcon">
                             <ForumIcon />
                         </Avatar>
                     </StyledBadge>
@@ -119,7 +126,9 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
             </div>
 
             <div className="chatArea__body">
-                <div className="chatArea__messages"></div>
+                <div className="chatArea__messages">
+                    <FlipMove></FlipMove>
+                </div>
 
                 <form onSubmit={sendMessageHandler} className="chatArea__form">
                     <FormControl className="chatArea__formControl">

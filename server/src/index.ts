@@ -42,7 +42,7 @@ app.use(express.json());
 app.use(routes);
 
 io.on("connection", (socket) => {
-    socket.on("Join room", ({ username, room }, callback) => {
+    socket.on("Join room", ({ username, room }, callback: Function) => {
         const { user, error }: addUserType = usersMethods.addUser({
             id: socket.id,
             username,
@@ -52,11 +52,11 @@ io.on("connection", (socket) => {
         if (error) return callback(error);
 
         socket.join(user.room);
-        socket.emit("Chatbot message", {
+        socket.emit("Render message", {
             username: "Chatbot",
             text: `Hi ${user.username}, welcome to room ${user.room}`,
         });
-        socket.broadcast.to(user.room).emit("Chatbot message", {
+        socket.broadcast.to(user.room).emit("Render message", {
             username: "Chatbot",
             text: `${user.username} has joined the room`,
         });
@@ -64,10 +64,10 @@ io.on("connection", (socket) => {
         callback();
     });
 
-    socket.on("Send message", (message: string, callback) => {
+    socket.on("Send message", (message: string, callback: Function) => {
         const user: userType = usersMethods.getUser(socket.id);
 
-        io.to(user.room).emit("Client message", {
+        io.to(user.room).emit("Render message", {
             username: user.username,
             text: message,
         });

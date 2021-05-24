@@ -1,1 +1,31 @@
-/* #e9e9eb - for card message */
+.message {
+    width: fit-content;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.message__user {
+    margin-left: auto;
+}
+
+.message__cardOther {
+    background-color: #e9e9eb !important;
+}
+
+.message__cardUser {
+    background-color: #0b81ff !important;
+    color: white !important;
+}
+
+.message__username {
+    color: grey;
+}
+
+.message__body {
+    margin-left: 0.5rem;
+}
+
+.message__card {
+    word-break: break-all;
+}

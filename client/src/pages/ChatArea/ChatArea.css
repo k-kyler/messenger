@@ -32,6 +32,11 @@
     font-weight: 600 !important;
 }
 
+.chatArea__roomIcon {
+    background-color: #f1f2f5 !important;
+    color: #0b81ff !important;
+}
+
 .chatArea__body {
     flex: 1;
     display: flex;

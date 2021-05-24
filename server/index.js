@@ -27,11 +27,11 @@ io.on("connection", function (socket) {
         if (error)
             return callback(error);
         socket.join(user.room);
-        socket.emit("Chatbot message", {
+        socket.emit("Render message", {
             username: "Chatbot",
             text: "Hi " + user.username + ", welcome to room " + user.room,
         });
-        socket.broadcast.to(user.room).emit("Chatbot message", {
+        socket.broadcast.to(user.room).emit("Render message", {
             username: "Chatbot",
             text: user.username + " has joined the room",
         });
@@ -39,7 +39,7 @@ io.on("connection", function (socket) {
     });
     socket.on("Send message", function (message, callback) {
         var user = usersMethods.getUser(socket.id);
-        io.to(user.room).emit("Client message", {
+        io.to(user.room).emit("Render message", {
             username: user.username,
             text: message,
         });
