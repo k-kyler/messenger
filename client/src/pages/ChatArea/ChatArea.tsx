@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, FormEvent } from "react";
 import "./ChatArea.css";
 import io from "socket.io-client";
 import {
@@ -7,6 +7,7 @@ import {
     Typography,
     IconButton,
     Badge,
+    FormControl,
     TextField,
 } from "@material-ui/core";
 import { Theme, withStyles, createStyles } from "@material-ui/core/styles";
@@ -55,8 +56,19 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     const [username, setUsername] = useState("");
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([{}]);
+    const [input, setInput] = useState("");
 
     const SERVER_URL: string = "http://localhost:5000";
+
+    const setInputHandler = (value: string) => {
+        setInput(value);
+    };
+
+    const sendMessageHandler = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        setInput("");
+    };
 
     useEffect(() => {
         const { username, room } = match.params;
@@ -109,10 +121,27 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
             <div className="chatArea__body">
                 <div className="chatArea__messages"></div>
 
-                <div className="chatArea__sendMessage">
-                    <TextField />
-                    <SendIcon />
-                </div>
+                <form onSubmit={sendMessageHandler} className="chatArea__form">
+                    <FormControl className="chatArea__formControl">
+                        <TextField
+                            className="chatArea__input"
+                            label="Send a message..."
+                            variant="outlined"
+                            onChange={(event) =>
+                                setInputHandler(event.target.value)
+                            }
+                            value={input}
+                        />
+                        <IconButton
+                            className="chatArea__button"
+                            disabled={!input}
+                            color="primary"
+                            type="submit"
+                        >
+                            <SendIcon />
+                        </IconButton>
+                    </FormControl>
+                </form>
             </div>
         </Paper>
     );

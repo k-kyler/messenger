@@ -15,7 +15,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: rgb(0, 132, 255);
+    background-color: #0b81ff;
 }
 
 .chatArea__header > .MuiButtonBase-root {
@@ -28,7 +28,7 @@
 }
 
 .chatArea__room > p {
-    margin-left: 0.5rem !important;
+    margin-left: 1rem !important;
     font-weight: 600 !important;
 }
 
@@ -38,4 +38,30 @@
     flex-direction: column;
     justify-content: space-between;
     color: black !important;
+}
+
+.chatArea__form {
+    padding: 1rem 0.5rem 1rem 1rem;
+}
+
+.chatArea__formControl {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+}
+
+.chatArea__input {
+    flex: 1 !important;
+    margin-right: 0.5rem !important;
+}
+
+.chatArea__input .MuiInputBase-root {
+    border-radius: 24px !important;
+    background-color: #e9e9eb !important;
+    opacity: 0.7 !important;
+}
+
+.chatArea__messages {
+    padding: 1rem;
+    height: 100%;
 }
