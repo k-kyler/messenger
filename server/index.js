@@ -27,19 +27,23 @@ io.on("connection", function (socket) {
         if (error)
             return callback(error);
         socket.join(user.room);
+        socket.emit("User id", user.id);
         socket.emit("Render message", {
             username: "Chatbot",
             text: "Hi " + user.username + ", welcome to room " + user.room,
+            type: "Chatbot",
         });
         socket.broadcast.to(user.room).emit("Render message", {
             username: "Chatbot",
             text: user.username + " has joined the room",
+            type: "Chatbot",
         });
         callback();
     });
     socket.on("Send message", function (message, callback) {
         var user = usersMethods.getUser(socket.id);
         io.to(user.room).emit("Render message", {
+            id: user.id,
             username: user.username,
             text: message,
         });

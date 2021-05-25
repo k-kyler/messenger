@@ -52,6 +52,7 @@ io.on("connection", (socket) => {
         if (error) return callback(error);
 
         socket.join(user.room);
+        socket.emit("User id", user.id);
         socket.emit("Render message", {
             username: "Chatbot",
             text: `Hi ${user.username}, welcome to room ${user.room}`,
@@ -68,6 +69,7 @@ io.on("connection", (socket) => {
         const user: userType = usersMethods.getUser(socket.id);
 
         io.to(user.room).emit("Render message", {
+            id: user.id,
             username: user.username,
             text: message,
         });

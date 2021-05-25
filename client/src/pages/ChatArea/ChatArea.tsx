@@ -13,10 +13,8 @@ import {
 import { Theme, withStyles, createStyles } from "@material-ui/core/styles";
 import ForumIcon from "@material-ui/icons/Forum";
 import CloseIcon from "@material-ui/icons/Close";
-import RedditIcon from "@material-ui/icons/Reddit";
 import SendIcon from "@material-ui/icons/Send";
 import Message from "../../components/Message/Message";
-import FlipMove from "react-flip-move";
 
 interface IChatArea {
     match: {
@@ -28,6 +26,7 @@ interface IChatArea {
 }
 
 type messageType = {
+    id: string;
     username: string;
     text: string;
 };
@@ -56,8 +55,9 @@ let socket: any;
 const ChatArea: FC<IChatArea> = ({ match }) => {
     const [room, setRoom] = useState("");
     const [username, setUsername] = useState("");
-    const [messages, setMessages] = useState([{}]);
+    const [messages, setMessages] = useState<messageType[]>([]);
     const [input, setInput] = useState("");
+    const [userId, setUserId] = useState("");
 
     const SERVER_URL: string = "http://localhost:5000";
 
@@ -88,6 +88,9 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
             },
             () => {}
         );
+        socket.on("User id", (userId: string) => {
+            setUserId(userId);
+        });
 
         return () => {
             socket.emit("disconnect");
@@ -127,7 +130,15 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
 
             <div className="chatArea__body">
                 <div className="chatArea__messages">
-                    <FlipMove></FlipMove>
+                    {messages.map((message, index) => (
+                        <Message
+                            key={index}
+                            id={message.id}
+                            username={message.username}
+                            text={message.text}
+                            userId={userId}
+                        />
+                    ))}
                 </div>
 
                 <form onSubmit={sendMessageHandler} className="chatArea__form">
