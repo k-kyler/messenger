@@ -11,6 +11,8 @@ import {
     TextField,
     Container,
     Dialog,
+    Grid,
+    Tooltip,
 } from "@material-ui/core";
 import { Theme, withStyles, createStyles } from "@material-ui/core/styles";
 import ForumIcon from "@material-ui/icons/Forum";
@@ -128,7 +130,12 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     return (
         <Container className="chatArea">
             {/* Chat box section */}
-            <div className="chatArea__center">
+            <Grid
+                container
+                justify="center"
+                alignItems="center"
+                className="chatArea__center"
+            >
                 <Paper className="chatArea__paper" elevation={2}>
                     <div className="chatArea__header">
                         <div className="chatArea__room">
@@ -145,7 +152,14 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                                 </Avatar>
                             </StyledBadge>
 
-                            <Typography variant="body1">{room}</Typography>
+                            <Tooltip title={room} placement="top-start">
+                                <Typography
+                                    className="chatArea__roomName"
+                                    variant="body1"
+                                >
+                                    {room}
+                                </Typography>
+                            </Tooltip>
                         </div>
                         <IconButton className="chatArea__outRoom">
                             <CloseIcon />
@@ -197,7 +211,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                         </form>
                     </div>
                 </Paper>
-            </div>
+            </Grid>
             {/* End of chat box section */}
 
             {/* Emoji dialog section */}

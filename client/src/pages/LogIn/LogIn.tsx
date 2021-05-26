@@ -46,7 +46,7 @@ const LogIn: FC = () => {
             <div className="LogIn__container">
                 <img src={Logo} className="LogIn__logo" />
 
-                <Typography variant="h5">Messenger</Typography>
+                <Typography variant="h5">Messimple</Typography>
 
                 <TextField
                     error={errorUsername}

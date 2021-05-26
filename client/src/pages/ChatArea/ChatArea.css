@@ -1,11 +1,5 @@
-.chatArea {
-    height: 100vh !important;
-}
-
 .chatArea__center {
-    display: grid;
-    place-items: center;
-    height: 100vh;
+    height: 100vh !important;
 }
 
 .chatArea__paper {
@@ -44,6 +38,12 @@
 .chatArea__roomIcon {
     background-color: #f1f2f5 !important;
     color: #0b81ff !important;
+}
+
+.chatArea__roomName {
+    width: 15rem !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .chatArea__body {
