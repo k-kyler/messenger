@@ -12,7 +12,9 @@ interface IMessage {
 
 const Message: FC<IMessage> = ({ id, username, text, userId }) => {
     return (
-        <div className={`message ${id ? "message__user" : ""}`}>
+        <div
+            className={`message ${id && id === userId ? "message__user" : ""}`}
+        >
             {!id ? (
                 <Avatar>
                     <RedditIcon />
@@ -29,7 +31,11 @@ const Message: FC<IMessage> = ({ id, username, text, userId }) => {
 
                 <Card
                     className={`message__card ${
-                        !id ? "message__cardOther" : "message__cardUser"
+                        !id || (id && id !== userId)
+                            ? "message__cardOther"
+                            : id && id === userId
+                            ? "message__cardUser"
+                            : ""
                     }`}
                 >
                     <CardContent>

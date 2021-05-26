@@ -61,6 +61,10 @@ io.on("connection", (socket) => {
             username: "Chatbot",
             text: `${user.username} has joined the room`,
         });
+        io.to(user.room).emit("Room data", {
+            room: user.room,
+            users: usersMethods.getUsersInRoom(user.room),
+        });
 
         callback();
     });
@@ -73,12 +77,23 @@ io.on("connection", (socket) => {
             username: user.username,
             text: message,
         });
+        io.to(user.room).emit("Room data", {
+            room: user.room,
+            users: usersMethods.getUsersInRoom(user.room),
+        });
 
         callback();
     });
 
     socket.on("disconnect", () => {
-        console.log("User has left");
+        const user: userType = usersMethods.deleteUser(socket.id);
+
+        if (user) {
+            io.to(user.room).emit("Render message", {
+                username: "Chatbot",
+                text: `${user.username} has left the room`,
+            });
+        }
     });
 });
 
