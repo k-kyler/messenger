@@ -1,6 +1,6 @@
-# Messenger
+# Messimple
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was developed by React.js, TypeScript, Node.js, Socket.io and Material UI.
 
 ## Available Scripts
 
