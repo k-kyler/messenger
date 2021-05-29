@@ -11,6 +11,6 @@
 
 @media (max-width: 427px) {
     .usersList {
-        width: 100%;
+        width: 100vw;
     }
 }
