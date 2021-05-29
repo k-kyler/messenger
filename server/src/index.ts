@@ -53,18 +53,22 @@ io.on("connection", (socket) => {
 
         socket.join(user.room);
         socket.emit("User id", user.id);
-        socket.emit("Render message", {
-            username: "Chatbot",
-            text: `Hi ${user.username}, welcome to room ${user.room}`,
-        });
-        socket.broadcast.to(user.room).emit("Render message", {
-            username: "Chatbot",
-            text: `${user.username} has joined the room`,
-        });
-        io.to(user.room).emit("Room data", {
-            room: user.room,
-            users: usersMethods.getUsersInRoom(user.room),
-        });
+        socket.emit(
+            "Render message",
+            {
+                username: "Chatbot",
+                text: `Hi ${user.username}, welcome to room ${user.room}`,
+            },
+            usersMethods.getUsersInRoom(user.room)
+        );
+        socket.broadcast.to(user.room).emit(
+            "Render message",
+            {
+                username: "Chatbot",
+                text: `${user.username} has joined the room`,
+            },
+            usersMethods.getUsersInRoom(user.room)
+        );
 
         callback();
     });
@@ -77,10 +81,6 @@ io.on("connection", (socket) => {
             username: user.username,
             text: message,
         });
-        io.to(user.room).emit("Room data", {
-            room: user.room,
-            users: usersMethods.getUsersInRoom(user.room),
-        });
 
         callback();
     });
@@ -89,10 +89,14 @@ io.on("connection", (socket) => {
         const user: userType = usersMethods.deleteUser(socket.id);
 
         if (user) {
-            io.to(user.room).emit("Render message", {
-                username: "Chatbot",
-                text: `${user.username} has left the room`,
-            });
+            io.to(user.room).emit(
+                "Render message",
+                {
+                    username: "Chatbot",
+                    text: `${user.username} has left the room`,
+                },
+                usersMethods.getUsersInRoom(user.room)
+            );
         }
     });
 });

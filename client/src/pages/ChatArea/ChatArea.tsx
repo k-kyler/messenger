@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, FormEvent, MouseEvent } from "react";
+import { FC, useState, useEffect, useRef, FormEvent, MouseEvent } from "react";
 import "./ChatArea.css";
 import io from "socket.io-client";
 import {
@@ -9,18 +9,21 @@ import {
     Badge,
     FormControl,
     TextField,
-    Container,
     Dialog,
     Grid,
     Tooltip,
+    Drawer,
+    Container,
 } from "@material-ui/core";
 import { Theme, withStyles, createStyles } from "@material-ui/core/styles";
-import ForumIcon from "@material-ui/icons/Forum";
-import CloseIcon from "@material-ui/icons/Close";
+import GroupIcon from "@material-ui/icons/Group";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SendIcon from "@material-ui/icons/Send";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
-import Message from "../../components/Message/Message";
 import Picker, { IEmojiData } from "emoji-picker-react";
+import ListIcon from "@material-ui/icons/List";
+import Message from "../../components/Message/Message";
+import UsersList from "../../components/UsersList/UsersList";
 
 interface IChatArea {
     match: {
@@ -31,13 +34,19 @@ interface IChatArea {
     };
 }
 
+export type userDataType = {
+    id: string;
+    username: string;
+    room: string;
+};
+
 type messageType = {
     id: string;
     username: string;
     text: string;
 };
 
-const StyledBadge = withStyles((theme: Theme) =>
+export const StyledBadge = withStyles((theme: Theme) =>
     createStyles({
         badge: {
             backgroundColor: "#44b700",
@@ -60,14 +69,21 @@ let socket: any;
 
 const ChatArea: FC<IChatArea> = ({ match }) => {
     const [room, setRoom] = useState("");
-    const [username, setUsername] = useState("");
     const [messages, setMessages] = useState<messageType[]>([]);
     const [input, setInput] = useState("");
     const [userId, setUserId] = useState("");
     const [chosenEmoji, setChosenEmoji] = useState<IEmojiData | any>();
     const [dialogState, setDialogState] = useState(false);
+    const [openUsersList, setOpenUsersList] = useState(false);
+    const [usersData, setUsersData] = useState<userDataType[]>([]);
 
     const SERVER_URL: string = "http://localhost:5000";
+
+    const messagesEndRef = useRef<HTMLDivElement | any>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    };
 
     const setInputHandler = (value: string) => {
         setInput(value);
@@ -92,10 +108,13 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
         setDialogState(true);
     };
 
+    const openUsersListHandler = () => {
+        setOpenUsersList(true);
+    };
+
     useEffect(() => {
         const { username, room } = match.params;
 
-        setUsername(username);
         setRoom(room);
 
         socket = io(SERVER_URL);
@@ -105,7 +124,11 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 username,
                 room,
             },
-            () => {}
+            (error: string) => {
+                if (error) {
+                    // window.location.href = "/";
+                }
+            }
         );
         socket.on("User id", (userId: string) => {
             setUserId(userId);
@@ -118,10 +141,18 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     }, [SERVER_URL, match.params]);
 
     useEffect(() => {
-        socket.on("Render message", (message: messageType) => {
-            setMessages([...messages, message]);
-        });
+        socket.on(
+            "Render message",
+            (message: messageType, usersDataEmit: userDataType[]) => {
+                setMessages([...messages, message]);
+                setUsersData(usersDataEmit);
+            }
+        );
     }, [messages]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, input]);
 
     useEffect(() => {
         if (chosenEmoji) setInput(input + chosenEmoji.emoji);
@@ -136,81 +167,99 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 alignItems="center"
                 className="chatArea__center"
             >
-                <Paper className="chatArea__paper" elevation={2}>
-                    <div className="chatArea__header">
-                        <div className="chatArea__room">
-                            <StyledBadge
-                                overlap="circle"
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "right",
-                                }}
-                                variant="dot"
-                            >
-                                <Avatar className="chatArea__roomIcon">
-                                    <ForumIcon />
-                                </Avatar>
-                            </StyledBadge>
-
-                            <Tooltip title={room} placement="top-start">
-                                <Typography
-                                    className="chatArea__roomName"
-                                    variant="body1"
+                <Grid item md={7}>
+                    <Paper className="chatArea__paper" elevation={3}>
+                        <div className="chatArea__header">
+                            <div className="chatArea__room">
+                                <StyledBadge
+                                    overlap="circle"
+                                    anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "right",
+                                    }}
+                                    variant="dot"
                                 >
-                                    {room}
-                                </Typography>
+                                    <Avatar className="chatArea__roomIcon">
+                                        <GroupIcon />
+                                    </Avatar>
+                                </StyledBadge>
+
+                                <Tooltip title={room} placement="top-start">
+                                    <Typography
+                                        className="chatArea__roomName"
+                                        variant="body1"
+                                    >
+                                        {room}
+                                    </Typography>
+                                </Tooltip>
+                            </div>
+
+                            <Tooltip title="Room members" placement="top">
+                                <IconButton
+                                    onClick={openUsersListHandler}
+                                    className="chatArea__usersList"
+                                >
+                                    <ListIcon />
+                                </IconButton>
+                            </Tooltip>
+
+                            <Tooltip title="Exit room" placement="top">
+                                <a href="/" className="chatArea__outRoom">
+                                    <IconButton>
+                                        <ExitToAppIcon />
+                                    </IconButton>
+                                </a>
                             </Tooltip>
                         </div>
-                        <IconButton className="chatArea__outRoom">
-                            <CloseIcon />
-                        </IconButton>
-                    </div>
 
-                    <div className="chatArea__body">
-                        <div className="chatArea__messages">
-                            {messages.map((message, index) => (
-                                <Message
-                                    key={index}
-                                    id={message.id}
-                                    username={message.username}
-                                    text={message.text}
-                                    userId={userId}
-                                />
-                            ))}
+                        <div className="chatArea__body">
+                            <div className="chatArea__messages">
+                                {messages.map((message, index) => (
+                                    <Message
+                                        key={index}
+                                        id={message.id}
+                                        username={message.username}
+                                        text={message.text}
+                                        userId={userId}
+                                    />
+                                ))}
+
+                                <div ref={messagesEndRef}></div>
+                            </div>
+
+                            <form
+                                onSubmit={sendMessageHandler}
+                                className="chatArea__form"
+                            >
+                                <FormControl className="chatArea__formControl">
+                                    <TextField
+                                        className="chatArea__input"
+                                        label="Send a message..."
+                                        variant="outlined"
+                                        onChange={(event) =>
+                                            setInputHandler(event.target.value)
+                                        }
+                                        value={input}
+                                        size="small"
+                                    />
+                                    <IconButton
+                                        color="primary"
+                                        onClick={dialogHandler}
+                                    >
+                                        <InsertEmoticonIcon />
+                                    </IconButton>
+                                    <IconButton
+                                        disabled={!input}
+                                        color="primary"
+                                        type="submit"
+                                    >
+                                        <SendIcon />
+                                    </IconButton>
+                                </FormControl>
+                            </form>
                         </div>
-
-                        <form
-                            onSubmit={sendMessageHandler}
-                            className="chatArea__form"
-                        >
-                            <FormControl className="chatArea__formControl">
-                                <TextField
-                                    className="chatArea__input"
-                                    label="Send a message..."
-                                    variant="outlined"
-                                    onChange={(event) =>
-                                        setInputHandler(event.target.value)
-                                    }
-                                    value={input}
-                                    size="small"
-                                />
-                                <IconButton
-                                    color="primary"
-                                    onClick={dialogHandler}
-                                >
-                                    <InsertEmoticonIcon />
-                                </IconButton>
-                                <IconButton
-                                    disabled={!input}
-                                    color="primary"
-                                    type="submit"
-                                >
-                                    <SendIcon />
-                                </IconButton>
-                            </FormControl>
-                        </form>
-                    </div>
-                </Paper>
+                    </Paper>
+                </Grid>
             </Grid>
             {/* End of chat box section */}
 
@@ -223,6 +272,20 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 />
             </Dialog>
             {/* End of emoji dialog section */}
+
+            {/* Users list drawer section */}
+            <Drawer
+                anchor="right"
+                open={openUsersList}
+                onClose={() => setOpenUsersList(false)}
+            >
+                <UsersList
+                    usersData={usersData}
+                    userId={userId}
+                    setOpenUsersList={setOpenUsersList}
+                />
+            </Drawer>
+            {/* End of users list drawer section */}
         </Container>
     );
 };

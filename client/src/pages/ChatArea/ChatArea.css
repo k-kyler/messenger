@@ -3,8 +3,6 @@
 }
 
 .chatArea__paper {
-    width: 33rem;
-    height: 33rem;
     color: white !important;
     border-radius: 8px !important;
     display: flex !important;
@@ -15,7 +13,6 @@
     padding: 0.5rem 0.5rem 0.5rem 1rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     background-color: #0b81ff;
     border-top-left-radius: 8px !important;
     border-top-right-radius: 8px !important;
@@ -26,6 +23,7 @@
 }
 
 .chatArea__room {
+    flex: 1;
     display: flex;
     align-items: center;
 }
@@ -79,4 +77,19 @@
     padding: 1rem;
     height: 22rem;
     overflow-y: auto;
+}
+
+.chatArea__outRoom {
+    text-decoration: none;
+}
+
+.chatArea__outRoom > button,
+.chatArea__usersList > button {
+    color: white !important;
+}
+
+@media (max-width: 427px) {
+    .chatArea__roomName {
+        width: 5rem !important;
+    }
 }

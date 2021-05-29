@@ -10,7 +10,14 @@ body {
         "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-image: url("./assets/background.jpg");
+    background-color: #f1f2f5;
+    background-image: url("./assets/background.svg");
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+@media (max-width: 427px) {
+    body {
+        background-image: none;
+    }
 }

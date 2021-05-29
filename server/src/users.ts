@@ -28,7 +28,7 @@ const addUser = ({ id, username, room }: addUserTypes) => {
         (user) => user.room === room && user.username === username
     );
 
-    if (existingUser) return { error: "Username is already existed" };
+    if (existingUser) return { error: "Username is already used in this room" };
 
     const user = { id, username, room };
 

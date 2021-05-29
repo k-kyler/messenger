@@ -1,0 +1,16 @@
+.usersList {
+    width: 19rem;
+}
+
+.usersList__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.5rem 0.5rem 0.5rem 1rem;
+}
+
+@media (max-width: 427px) {
+    .usersList {
+        width: 100%;
+    }
+}

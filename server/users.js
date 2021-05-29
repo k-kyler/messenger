@@ -11,7 +11,7 @@ var addUser = function (_a) {
     room = room.trim().toLowerCase();
     var existingUser = users.find(function (user) { return user.room === room && user.username === username; });
     if (existingUser)
-        return { error: "Username is already existed" };
+        return { error: "Username is already used in this room" };
     var user = { id: id, username: username, room: room };
     users.push(user);
     return { user: user };
