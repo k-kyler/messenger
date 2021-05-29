@@ -30,7 +30,7 @@ const UsersList: FC<IUsersListProps> = ({
 
             <Divider />
 
-            {usersData.length && (
+            {usersData && usersData.length && (
                 <List className="usersList__list">
                     {usersData.map((user) => (
                         <UserItem

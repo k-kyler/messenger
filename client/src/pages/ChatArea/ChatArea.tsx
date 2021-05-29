@@ -14,6 +14,11 @@ import {
     Tooltip,
     Drawer,
     Container,
+    Button,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    DialogContentText,
 } from "@material-ui/core";
 import { Theme, withStyles, createStyles } from "@material-ui/core/styles";
 import GroupIcon from "@material-ui/icons/Group";
@@ -76,6 +81,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     const [dialogState, setDialogState] = useState(false);
     const [openUsersList, setOpenUsersList] = useState(false);
     const [usersData, setUsersData] = useState<userDataType[]>([]);
+    const [errorAlert, setErrorAlert] = useState(false);
 
     const SERVER_URL: string = "http://localhost:5000";
 
@@ -126,7 +132,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
             },
             (error: string) => {
                 if (error) {
-                    // window.location.href = "/";
+                    setErrorAlert(true);
                 }
             }
         );
@@ -272,6 +278,27 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 />
             </Dialog>
             {/* End of emoji dialog section */}
+
+            {/* Error alert dialog section */}
+            <Dialog open={errorAlert} onClose={() => setErrorAlert(false)}>
+                <DialogTitle>Invalid username</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Your username has already been taken in this room,
+                        please try another.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="secondary"
+                        autoFocus
+                        onClick={() => (window.location.href = "/")}
+                    >
+                        Go back
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            {/* End of error alert dialog section */}
 
             {/* Users list drawer section */}
             <Drawer

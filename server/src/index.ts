@@ -76,11 +76,15 @@ io.on("connection", (socket) => {
     socket.on("Send message", (message: string, callback: Function) => {
         const user: userType = usersMethods.getUser(socket.id);
 
-        io.to(user.room).emit("Render message", {
-            id: user.id,
-            username: user.username,
-            text: message,
-        });
+        io.to(user.room).emit(
+            "Render message",
+            {
+                id: user.id,
+                username: user.username,
+                text: message,
+            },
+            usersMethods.getUsersInRoom(user.room)
+        );
 
         callback();
     });

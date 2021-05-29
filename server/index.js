@@ -44,7 +44,7 @@ io.on("connection", function (socket) {
             id: user.id,
             username: user.username,
             text: message,
-        });
+        }, usersMethods.getUsersInRoom(user.room));
         callback();
     });
     socket.on("disconnect", function () {
