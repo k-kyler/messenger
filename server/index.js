@@ -9,8 +9,8 @@ var app = express();
 var server = http.createServer(app);
 var io = socketio(server, {
     cors: {
-        origin: "https://messimple-05.netlify.app/",
-        methods: ["GET", "POST"],
+        origin: "*",
+        methods: ["GET"],
     },
 });
 app.use(cors());

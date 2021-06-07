@@ -32,8 +32,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
     cors: {
-        origin: "https://messimple-05.netlify.app/",
-        methods: ["GET", "POST"],
+        origin: "*",
+        methods: ["GET"],
     },
 });
 

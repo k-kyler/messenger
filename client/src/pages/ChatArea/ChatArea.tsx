@@ -25,6 +25,9 @@ import GroupIcon from "@material-ui/icons/Group";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SendIcon from "@material-ui/icons/Send";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
+import ImageIcon from "@material-ui/icons/Image";
+import BackupIcon from "@material-ui/icons/Backup";
+import DeleteIcon from "@material-ui/icons/Delete";
 import Picker, { IEmojiData } from "emoji-picker-react";
 import ListIcon from "@material-ui/icons/List";
 import Message from "../../components/Message/Message";
@@ -82,7 +85,10 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     const [openUsersList, setOpenUsersList] = useState(false);
     const [usersData, setUsersData] = useState<userDataType[]>([]);
     const [errorAlert, setErrorAlert] = useState(false);
+    const [uploadImageDialog, setUploadImageDialog] = useState(false);
+    const [previewImageSrc, setPreviewImageSrc] = useState("");
 
+    // const SERVER_URL: string = "https://messimple-server-05.herokuapp.com/";
     const SERVER_URL: string = "http://localhost:5000";
 
     const messagesEndRef = useRef<HTMLDivElement | any>(null);
@@ -116,6 +122,14 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
 
     const openUsersListHandler = () => {
         setOpenUsersList(true);
+    };
+
+    const uploadImageDialogHandler = () => {
+        setUploadImageDialog(true);
+    };
+
+    const displayPreviewImageHandler = (event: any) => {
+        setPreviewImageSrc(URL.createObjectURL(event.target.files[0]));
     };
 
     useEffect(() => {
@@ -238,6 +252,20 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                                 className="chatArea__form"
                             >
                                 <FormControl className="chatArea__formControl">
+                                    <IconButton
+                                        color="primary"
+                                        onClick={dialogHandler}
+                                    >
+                                        <InsertEmoticonIcon />
+                                    </IconButton>
+
+                                    <IconButton
+                                        color="primary"
+                                        onClick={uploadImageDialogHandler}
+                                    >
+                                        <ImageIcon />
+                                    </IconButton>
+
                                     <TextField
                                         className="chatArea__input"
                                         label="Send a message..."
@@ -248,12 +276,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                                         value={input}
                                         size="small"
                                     />
-                                    <IconButton
-                                        color="primary"
-                                        onClick={dialogHandler}
-                                    >
-                                        <InsertEmoticonIcon />
-                                    </IconButton>
+
                                     <IconButton
                                         disabled={!input}
                                         color="primary"
@@ -278,6 +301,72 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 />
             </Dialog>
             {/* End of emoji dialog section */}
+
+            {/* Upload image dialog */}
+            <Dialog
+                className="chatArea__uploadImageDialog"
+                open={uploadImageDialog}
+                onClose={() => setUploadImageDialog(false)}
+            >
+                <DialogTitle>Upload image</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        <img
+                            src={previewImageSrc}
+                            className="chatArea__previewImage"
+                        />
+
+                        {!previewImageSrc && (
+                            <>
+                                <input
+                                    accept="image/*"
+                                    id="contained-button-file"
+                                    multiple
+                                    type="file"
+                                    onChange={(event) =>
+                                        displayPreviewImageHandler(event)
+                                    }
+                                />
+                                <label htmlFor="contained-button-file">
+                                    <Button
+                                        startIcon={<BackupIcon />}
+                                        color="primary"
+                                        component="span"
+                                    >
+                                        Choose your image
+                                    </Button>
+                                </label>
+                            </>
+                        )}
+
+                        {previewImageSrc && (
+                            <div className="chatArea__uploadImageDialogRemove">
+                                <Button
+                                    startIcon={<DeleteIcon />}
+                                    color="secondary"
+                                    component="span"
+                                    onClick={() => setPreviewImageSrc("")}
+                                >
+                                    Remove image
+                                </Button>
+                            </div>
+                        )}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button color="primary" disabled={!previewImageSrc}>
+                        Upload
+                    </Button>
+
+                    <Button
+                        onClick={() => setUploadImageDialog(false)}
+                        color="secondary"
+                    >
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            {/* End of upload image dialog */}
 
             {/* Error alert dialog section */}
             <Dialog open={errorAlert} onClose={() => setErrorAlert(false)}>

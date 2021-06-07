@@ -88,6 +88,25 @@
     color: white !important;
 }
 
+#contained-button-file {
+    display: none;
+}
+
+.chatArea__previewImage {
+    height: auto;
+    width: 100%;
+}
+
+.chatArea__uploadImageDialog span,
+.chatArea__uploadImageDialog button {
+    text-transform: none !important;
+}
+
+.chatArea__uploadImageDialogRemove {
+    display: flex;
+    justify-content: center;
+}
+
 @media (max-width: 427px) {
     .chatArea__roomName {
         width: 5rem !important;
