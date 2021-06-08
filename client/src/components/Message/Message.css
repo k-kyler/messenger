@@ -35,4 +35,10 @@
 .message__image {
     height: auto;
     max-width: 100%;
+    cursor: pointer;
+}
+
+.message__imagePreviewDialog {
+    height: auto;
+    max-width: 100%;
 }

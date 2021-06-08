@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef, FormEvent, MouseEvent } from "react";
+import { FC, useState, useEffect, FormEvent, MouseEvent } from "react";
 import "./ChatArea.css";
 import io from "socket.io-client";
 import {
@@ -92,10 +92,11 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     // const SERVER_URL: string = "https://messimple-server-05.herokuapp.com/";
     const SERVER_URL: string = "http://localhost:5000";
 
-    const messagesEndRef = useRef<HTMLDivElement | any>(null);
-
     const scrollToBottom = () => {
-        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        let chatAreaMessages: HTMLElement | any =
+            document.getElementById("chatAreaMessages");
+
+        chatAreaMessages.scrollTop = chatAreaMessages.scrollHeight;
     };
 
     const setInputHandler = (value: string) => {
@@ -249,7 +250,10 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                         </div>
 
                         <div className="chatArea__body">
-                            <div className="chatArea__messages">
+                            <div
+                                className="chatArea__messages"
+                                id="chatAreaMessages"
+                            >
                                 {messages.map((message, index) => (
                                     <Message
                                         key={index}
@@ -260,8 +264,6 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                                         userId={userId}
                                     />
                                 ))}
-
-                                <div ref={messagesEndRef} />
                             </div>
 
                             <form

@@ -1,6 +1,13 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import "./Message.css";
-import { Avatar, Card, CardContent, Typography } from "@material-ui/core";
+import {
+    Avatar,
+    Card,
+    CardContent,
+    Typography,
+    Dialog,
+    DialogContent,
+} from "@material-ui/core";
 import RedditIcon from "@material-ui/icons/Reddit";
 
 interface IMessage {
@@ -12,6 +19,10 @@ interface IMessage {
 }
 
 const Message: FC<IMessage> = ({ id, username, text, userId, imageSrc }) => {
+    const [imagePreviewDialog, setImagePreviewDialog] = useState(false);
+
+    const showImagePreviewHandler = () => setImagePreviewDialog(true);
+
     return (
         <div
             className={`message ${id && id === userId ? "message__user" : ""}`}
@@ -32,7 +43,23 @@ const Message: FC<IMessage> = ({ id, username, text, userId, imageSrc }) => {
 
                 {!text && imageSrc ? (
                     <>
-                        <img src={imageSrc} className="message__image" />
+                        <img
+                            src={imageSrc}
+                            className="message__image"
+                            onClick={showImagePreviewHandler}
+                        />
+
+                        <Dialog
+                            open={imagePreviewDialog}
+                            onClose={() => setImagePreviewDialog(false)}
+                        >
+                            <DialogContent>
+                                <img
+                                    src={imageSrc}
+                                    className="message__imagePreviewDialog"
+                                />
+                            </DialogContent>
+                        </Dialog>
                     </>
                 ) : (
                     <>
