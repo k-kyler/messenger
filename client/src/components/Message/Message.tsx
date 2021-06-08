@@ -8,9 +8,10 @@ interface IMessage {
     username: string;
     text: string;
     userId: string;
+    imageSrc?: string;
 }
 
-const Message: FC<IMessage> = ({ id, username, text, userId }) => {
+const Message: FC<IMessage> = ({ id, username, text, userId, imageSrc }) => {
     return (
         <div
             className={`message ${id && id === userId ? "message__user" : ""}`}
@@ -29,19 +30,27 @@ const Message: FC<IMessage> = ({ id, username, text, userId }) => {
                     </Typography>
                 )}
 
-                <Card
-                    className={`message__card ${
-                        !id || (id && id !== userId)
-                            ? "message__cardOther"
-                            : id && id === userId
-                            ? "message__cardUser"
-                            : ""
-                    }`}
-                >
-                    <CardContent>
-                        <Typography variant="body1">{text}</Typography>
-                    </CardContent>
-                </Card>
+                {!text && imageSrc ? (
+                    <>
+                        <img src={imageSrc} className="message__image" />
+                    </>
+                ) : (
+                    <>
+                        <Card
+                            className={`message__card ${
+                                !id || (id && id !== userId)
+                                    ? "message__cardOther"
+                                    : id && id === userId
+                                    ? "message__cardUser"
+                                    : ""
+                            }`}
+                        >
+                            <CardContent>
+                                <Typography variant="body1">{text}</Typography>
+                            </CardContent>
+                        </Card>
+                    </>
+                )}
             </div>
         </div>
     );

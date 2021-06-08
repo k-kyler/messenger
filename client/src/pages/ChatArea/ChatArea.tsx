@@ -52,6 +52,7 @@ type messageType = {
     id: string;
     username: string;
     text: string;
+    imageSrc?: string;
 };
 
 export const StyledBadge = withStyles((theme: Theme) =>
@@ -132,6 +133,15 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
         setPreviewImageSrc(URL.createObjectURL(event.target.files[0]));
     };
 
+    const uploadImageHandler = () => {
+        if (previewImageSrc) {
+            socket.emit("Upload image", previewImageSrc, () => {
+                setUploadImageDialog(false);
+                setPreviewImageSrc("");
+            });
+        }
+    };
+
     useEffect(() => {
         const { username, room } = match.params;
 
@@ -168,14 +178,20 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 setUsersData(usersDataEmit);
             }
         );
+
+        socket.on(
+            "Render image",
+            (imageMessage: messageType, usersDataEmit: userDataType[]) => {
+                setMessages([...messages, imageMessage]);
+                setUsersData(usersDataEmit);
+            }
+        );
+
+        scrollToBottom();
     }, [messages]);
 
     useEffect(() => {
-        scrollToBottom();
-    }, [messages, input]);
-
-    useEffect(() => {
-        if (chosenEmoji) setInput(input + chosenEmoji.emoji);
+        if (chosenEmoji) setInput((input) => input + chosenEmoji.emoji);
     }, [chosenEmoji]);
 
     return (
@@ -240,11 +256,12 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                                         id={message.id}
                                         username={message.username}
                                         text={message.text}
+                                        imageSrc={message.imageSrc}
                                         userId={userId}
                                     />
                                 ))}
 
-                                <div ref={messagesEndRef}></div>
+                                <div ref={messagesEndRef} />
                             </div>
 
                             <form
@@ -310,51 +327,53 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
             >
                 <DialogTitle>Upload image</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        <img
-                            src={previewImageSrc}
-                            className="chatArea__previewImage"
-                        />
+                    <img
+                        src={previewImageSrc}
+                        className="chatArea__previewImage"
+                    />
 
-                        {!previewImageSrc && (
-                            <>
-                                <input
-                                    accept="image/*"
-                                    id="contained-button-file"
-                                    multiple
-                                    type="file"
-                                    onChange={(event) =>
-                                        displayPreviewImageHandler(event)
-                                    }
-                                />
-                                <label htmlFor="contained-button-file">
-                                    <Button
-                                        startIcon={<BackupIcon />}
-                                        color="primary"
-                                        component="span"
-                                    >
-                                        Choose your image
-                                    </Button>
-                                </label>
-                            </>
-                        )}
-
-                        {previewImageSrc && (
-                            <div className="chatArea__uploadImageDialogRemove">
+                    {!previewImageSrc && (
+                        <>
+                            <input
+                                accept="image/*"
+                                id="contained-button-file"
+                                multiple
+                                type="file"
+                                onChange={(event) =>
+                                    displayPreviewImageHandler(event)
+                                }
+                            />
+                            <label htmlFor="contained-button-file">
                                 <Button
-                                    startIcon={<DeleteIcon />}
-                                    color="secondary"
+                                    startIcon={<BackupIcon />}
+                                    color="primary"
                                     component="span"
-                                    onClick={() => setPreviewImageSrc("")}
                                 >
-                                    Remove image
+                                    Choose your image
                                 </Button>
-                            </div>
-                        )}
-                    </DialogContentText>
+                            </label>
+                        </>
+                    )}
+
+                    {previewImageSrc && (
+                        <div className="chatArea__uploadImageDialogRemove">
+                            <Button
+                                startIcon={<DeleteIcon />}
+                                color="secondary"
+                                component="span"
+                                onClick={() => setPreviewImageSrc("")}
+                            >
+                                Remove image
+                            </Button>
+                        </div>
+                    )}
                 </DialogContent>
                 <DialogActions>
-                    <Button color="primary" disabled={!previewImageSrc}>
+                    <Button
+                        color="primary"
+                        disabled={!previewImageSrc}
+                        onClick={uploadImageHandler}
+                    >
                         Upload
                     </Button>
 
