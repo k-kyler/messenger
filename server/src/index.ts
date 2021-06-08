@@ -89,6 +89,22 @@ io.on("connection", (socket) => {
         callback();
     });
 
+    socket.on("Upload image", (imageSrc: string, callback: Function) => {
+        const user: userType = usersMethods.getUser(socket.id);
+
+        io.to(user.room).emit(
+            "Render image",
+            {
+                id: user.id,
+                username: user.username,
+                imageSrc,
+            },
+            usersMethods.getUsersInRoom(user.room)
+        );
+
+        callback();
+    });
+
     socket.on("disconnect", () => {
         const user: userType = usersMethods.deleteUser(socket.id);
 

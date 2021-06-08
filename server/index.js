@@ -47,6 +47,15 @@ io.on("connection", function (socket) {
         }, usersMethods.getUsersInRoom(user.room));
         callback();
     });
+    socket.on("Upload image", function (imageSrc, callback) {
+        var user = usersMethods.getUser(socket.id);
+        io.to(user.room).emit("Render image", {
+            id: user.id,
+            username: user.username,
+            imageSrc: imageSrc,
+        }, usersMethods.getUsersInRoom(user.room));
+        callback();
+    });
     socket.on("disconnect", function () {
         var user = usersMethods.deleteUser(socket.id);
         if (user) {
