@@ -105,6 +105,22 @@ io.on("connection", (socket) => {
         callback();
     });
 
+    socket.on("Upload video", (videoSrc: string, callback: Function) => {
+        const user: userType = usersMethods.getUser(socket.id);
+
+        io.to(user.room).emit(
+            "Render video",
+            {
+                id: user.id,
+                username: user.username,
+                videoSrc,
+            },
+            usersMethods.getUsersInRoom(user.room)
+        );
+
+        callback();
+    });
+
     socket.on("disconnect", () => {
         const user: userType = usersMethods.deleteUser(socket.id);
 

@@ -16,9 +16,17 @@ interface IMessage {
     text: string;
     userId: string;
     imageSrc?: string;
+    videoSrc?: string;
 }
 
-const Message: FC<IMessage> = ({ id, username, text, userId, imageSrc }) => {
+const Message: FC<IMessage> = ({
+    id,
+    username,
+    text,
+    userId,
+    imageSrc,
+    videoSrc,
+}) => {
     const [imagePreviewDialog, setImagePreviewDialog] = useState(false);
 
     const showImagePreviewHandler = () => setImagePreviewDialog(true);
@@ -60,6 +68,14 @@ const Message: FC<IMessage> = ({ id, username, text, userId, imageSrc }) => {
                                 />
                             </DialogContent>
                         </Dialog>
+                    </>
+                ) : !text && videoSrc ? (
+                    <>
+                        <video
+                            src={videoSrc}
+                            controls
+                            className="message__video"
+                        ></video>
                     </>
                 ) : (
                     <>

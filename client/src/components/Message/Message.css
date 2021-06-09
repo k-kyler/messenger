@@ -32,13 +32,15 @@
     border-radius: 12px !important;
 }
 
-.message__image {
+.message__image,
+.message__video {
     height: auto;
     max-width: 100%;
     cursor: pointer;
 }
 
-.message__imagePreviewDialog {
+.message__imagePreviewDialog,
+.message__videoPreviewDialog {
     height: auto;
     max-width: 100%;
 }

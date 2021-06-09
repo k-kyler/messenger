@@ -28,6 +28,7 @@ import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import ImageIcon from "@material-ui/icons/Image";
 import BackupIcon from "@material-ui/icons/Backup";
 import DeleteIcon from "@material-ui/icons/Delete";
+import DuoIcon from "@material-ui/icons/Duo";
 import Picker, { IEmojiData } from "emoji-picker-react";
 import ListIcon from "@material-ui/icons/List";
 import Message from "../../components/Message/Message";
@@ -53,6 +54,7 @@ type messageType = {
     username: string;
     text: string;
     imageSrc?: string;
+    videoSrc?: string;
 };
 
 export const StyledBadge = withStyles((theme: Theme) =>
@@ -87,7 +89,9 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     const [usersData, setUsersData] = useState<userDataType[]>([]);
     const [errorAlert, setErrorAlert] = useState(false);
     const [uploadImageDialog, setUploadImageDialog] = useState(false);
+    const [uploadVideoDialog, setUploadVideoDialog] = useState(false);
     const [previewImageSrc, setPreviewImageSrc] = useState("");
+    const [previewVideoSrc, setPreviewVideoSrc] = useState("");
 
     // const SERVER_URL: string = "https://messimple-server-05.herokuapp.com/";
     const SERVER_URL: string = "http://localhost:5000";
@@ -130,8 +134,16 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
         setUploadImageDialog(true);
     };
 
+    const uploadVideoDialogHandler = () => {
+        setUploadVideoDialog(true);
+    };
+
     const displayPreviewImageHandler = (event: any) => {
         setPreviewImageSrc(URL.createObjectURL(event.target.files[0]));
+    };
+
+    const displayPreviewVideoHandler = (event: any) => {
+        setPreviewVideoSrc(URL.createObjectURL(event.target.files[0]));
     };
 
     const uploadImageHandler = () => {
@@ -139,6 +151,15 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
             socket.emit("Upload image", previewImageSrc, () => {
                 setUploadImageDialog(false);
                 setPreviewImageSrc("");
+            });
+        }
+    };
+
+    const uploadVideoHandler = () => {
+        if (previewVideoSrc) {
+            socket.emit("Upload video", previewVideoSrc, () => {
+                setUploadVideoDialog(false);
+                setPreviewVideoSrc("");
             });
         }
     };
@@ -184,6 +205,14 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
             "Render image",
             (imageMessage: messageType, usersDataEmit: userDataType[]) => {
                 setMessages([...messages, imageMessage]);
+                setUsersData(usersDataEmit);
+            }
+        );
+
+        socket.on(
+            "Render video",
+            (videoMessage: messageType, usersDataEmit: userDataType[]) => {
+                setMessages([...messages, videoMessage]);
                 setUsersData(usersDataEmit);
             }
         );
@@ -261,6 +290,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                                         username={message.username}
                                         text={message.text}
                                         imageSrc={message.imageSrc}
+                                        videoSrc={message.videoSrc}
                                         userId={userId}
                                     />
                                 ))}
@@ -283,6 +313,13 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                                         onClick={uploadImageDialogHandler}
                                     >
                                         <ImageIcon />
+                                    </IconButton>
+
+                                    <IconButton
+                                        color="primary"
+                                        onClick={uploadVideoDialogHandler}
+                                    >
+                                        <DuoIcon />
                                     </IconButton>
 
                                     <TextField
@@ -338,14 +375,14 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                         <>
                             <input
                                 accept="image/*"
-                                id="contained-button-file"
+                                id="contained-button-image"
                                 multiple
                                 type="file"
                                 onChange={(event) =>
                                     displayPreviewImageHandler(event)
                                 }
                             />
-                            <label htmlFor="contained-button-file">
+                            <label htmlFor="contained-button-image">
                                 <Button
                                     startIcon={<BackupIcon />}
                                     color="primary"
@@ -388,6 +425,77 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 </DialogActions>
             </Dialog>
             {/* End of upload image dialog */}
+
+            {/* Upload video dialog */}
+            <Dialog
+                className="chatArea__uploadVideoDialog"
+                open={uploadVideoDialog}
+                onClose={() => setUploadVideoDialog(false)}
+            >
+                <DialogTitle>Upload video</DialogTitle>
+                <DialogContent>
+                    {!previewVideoSrc && (
+                        <>
+                            <input
+                                accept="video/*"
+                                id="contained-button-video"
+                                multiple
+                                type="file"
+                                onChange={(event) =>
+                                    displayPreviewVideoHandler(event)
+                                }
+                            />
+                            <label htmlFor="contained-button-video">
+                                <Button
+                                    startIcon={<BackupIcon />}
+                                    color="primary"
+                                    component="span"
+                                >
+                                    Choose your video
+                                </Button>
+                            </label>
+                        </>
+                    )}
+
+                    {previewVideoSrc && (
+                        <>
+                            <video
+                                controls
+                                src={previewVideoSrc}
+                                className="chatArea__previewVideo"
+                            ></video>
+
+                            <div className="chatArea__uploadVideoDialogRemove">
+                                <Button
+                                    startIcon={<DeleteIcon />}
+                                    color="secondary"
+                                    component="span"
+                                    onClick={() => setPreviewVideoSrc("")}
+                                >
+                                    Remove video
+                                </Button>
+                            </div>
+                        </>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        disabled={!previewVideoSrc}
+                        onClick={uploadVideoHandler}
+                    >
+                        Upload
+                    </Button>
+
+                    <Button
+                        onClick={() => setUploadVideoDialog(false)}
+                        color="secondary"
+                    >
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            {/* End of upload video dialog */}
 
             {/* Error alert dialog section */}
             <Dialog open={errorAlert} onClose={() => setErrorAlert(false)}>
