@@ -19,6 +19,8 @@ import {
     DialogContent,
     DialogTitle,
     DialogContentText,
+    Menu,
+    MenuItem,
 } from "@material-ui/core";
 import { Theme, withStyles, createStyles } from "@material-ui/core/styles";
 import GroupIcon from "@material-ui/icons/Group";
@@ -29,6 +31,7 @@ import ImageIcon from "@material-ui/icons/Image";
 import BackupIcon from "@material-ui/icons/Backup";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DuoIcon from "@material-ui/icons/Duo";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import Picker, { IEmojiData } from "emoji-picker-react";
 import ListIcon from "@material-ui/icons/List";
 import Message from "../../components/Message/Message";
@@ -92,6 +95,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     const [uploadVideoDialog, setUploadVideoDialog] = useState(false);
     const [previewImageSrc, setPreviewImageSrc] = useState("");
     const [previewVideoSrc, setPreviewVideoSrc] = useState("");
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     // const SERVER_URL: string = "https://messimple-server-05.herokuapp.com/";
     const SERVER_URL: string = "http://localhost:5000";
@@ -124,6 +128,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
 
     const dialogHandler = () => {
         setDialogState(true);
+        closeMenuHandler();
     };
 
     const openUsersListHandler = () => {
@@ -132,10 +137,12 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
 
     const uploadImageDialogHandler = () => {
         setUploadImageDialog(true);
+        closeMenuHandler();
     };
 
     const uploadVideoDialogHandler = () => {
         setUploadVideoDialog(true);
+        closeMenuHandler();
     };
 
     const displayPreviewImageHandler = (event: any) => {
@@ -162,6 +169,14 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 setPreviewVideoSrc("");
             });
         }
+    };
+
+    const openMenuHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const closeMenuHandler = () => {
+        setAnchorEl(null);
     };
 
     useEffect(() => {
@@ -303,23 +318,9 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                                 <FormControl className="chatArea__formControl">
                                     <IconButton
                                         color="primary"
-                                        onClick={dialogHandler}
+                                        onClick={openMenuHandler}
                                     >
-                                        <InsertEmoticonIcon />
-                                    </IconButton>
-
-                                    <IconButton
-                                        color="primary"
-                                        onClick={uploadImageDialogHandler}
-                                    >
-                                        <ImageIcon />
-                                    </IconButton>
-
-                                    <IconButton
-                                        color="primary"
-                                        onClick={uploadVideoDialogHandler}
-                                    >
-                                        <DuoIcon />
+                                        <OpenInNewIcon />
                                     </IconButton>
 
                                     <TextField
@@ -496,6 +497,41 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 </DialogActions>
             </Dialog>
             {/* End of upload video dialog */}
+
+            {/* Chat menu */}
+            <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={closeMenuHandler}
+                className="chatArea__chatMenu"
+            >
+                <MenuItem
+                    color="primary"
+                    startIcon={<InsertEmoticonIcon />}
+                    component={Button}
+                    onClick={dialogHandler}
+                >
+                    Emoji
+                </MenuItem>
+                <MenuItem
+                    color="primary"
+                    startIcon={<ImageIcon />}
+                    component={Button}
+                    onClick={uploadImageDialogHandler}
+                >
+                    Upload image
+                </MenuItem>
+                <MenuItem
+                    color="primary"
+                    startIcon={<DuoIcon />}
+                    component={Button}
+                    onClick={uploadVideoDialogHandler}
+                >
+                    Upload video
+                </MenuItem>
+            </Menu>
+            {/* End of chat menu */}
 
             {/* Error alert dialog section */}
             <Dialog open={errorAlert} onClose={() => setErrorAlert(false)}>

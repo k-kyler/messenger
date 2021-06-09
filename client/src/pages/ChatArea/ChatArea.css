@@ -112,6 +112,11 @@
     justify-content: center;
 }
 
+.chatArea__chatMenu button {
+    width: 100% !important;
+    text-transform: none !important;
+}
+
 @media (max-width: 427px) {
     .chatArea__roomName {
         width: 5rem !important;
