@@ -98,8 +98,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [checkJoin, setCheckJoin] = useState(false);
 
-    const SERVER_URL: string = "https://messimple-server-05.herokuapp.com/";
-    // const SERVER_URL: string = "http://localhost:5000";
+    const SERVER_URL: string = "http://localhost:5000";
 
     const scrollToBottom = () => {
         let chatAreaMessages: HTMLElement | any =
@@ -250,7 +249,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 alignItems="center"
                 className="chatArea__center"
             >
-                <Grid item md={10}>
+                <Grid item md={9}>
                     <Paper className="chatArea__paper">
                         <div className="chatArea__header">
                             <div className="chatArea__room">
