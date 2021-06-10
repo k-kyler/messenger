@@ -9,6 +9,7 @@ import {
     DialogContent,
 } from "@material-ui/core";
 import RedditIcon from "@material-ui/icons/Reddit";
+import VideoPlayerLogo from "../../assets/videoplayer.gif";
 
 interface IMessage {
     id: string;
@@ -70,13 +71,14 @@ const Message: FC<IMessage> = ({
                         </Dialog>
                     </>
                 ) : !text && videoSrc ? (
-                    <>
+                    <div className="message__videoOverlay">
                         <video
                             src={videoSrc}
                             controls
                             className="message__video"
+                            poster={VideoPlayerLogo}
                         ></video>
-                    </>
+                    </div>
                 ) : (
                     <>
                         <Card

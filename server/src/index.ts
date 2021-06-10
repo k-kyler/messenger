@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
             "Render message",
             {
                 username: "Chatbot",
-                text: `Hi ${user.username}, welcome to room ${user.room}`,
+                text: `Hello ${user.username}, welcome to ${user.room}`,
             },
             usersMethods.getUsersInRoom(user.room)
         );

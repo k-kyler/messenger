@@ -39,6 +39,10 @@
     cursor: pointer;
 }
 
+.message__videoOverlay {
+    box-shadow: 0px 8px 20px rgb(0 0 0 / 6%);
+}
+
 .message__imagePreviewDialog,
 .message__videoPreviewDialog {
     height: auto;

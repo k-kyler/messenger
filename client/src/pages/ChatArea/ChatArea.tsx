@@ -97,8 +97,8 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     const [previewVideoSrc, setPreviewVideoSrc] = useState("");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    // const SERVER_URL: string = "https://messimple-server-05.herokuapp.com/";
-    const SERVER_URL: string = "http://localhost:5000";
+    const SERVER_URL: string = "https://messimple-server-05.herokuapp.com/";
+    // const SERVER_URL: string = "http://localhost:5000";
 
     const scrollToBottom = () => {
         let chatAreaMessages: HTMLElement | any =
@@ -248,8 +248,8 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
                 alignItems="center"
                 className="chatArea__center"
             >
-                <Grid item md={7}>
-                    <Paper className="chatArea__paper" elevation={3}>
+                <Grid item md={10}>
+                    <Paper className="chatArea__paper">
                         <div className="chatArea__header">
                             <div className="chatArea__room">
                                 <StyledBadge

@@ -30,7 +30,7 @@ io.on("connection", function (socket) {
         socket.emit("User id", user.id);
         socket.emit("Render message", {
             username: "Chatbot",
-            text: "Hi " + user.username + ", welcome to room " + user.room,
+            text: "Hello " + user.username + ", welcome to " + user.room,
         }, usersMethods.getUsersInRoom(user.room));
         socket.broadcast.to(user.room).emit("Render message", {
             username: "Chatbot",
