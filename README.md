@@ -45,7 +45,7 @@ In server directory, you can run:
 
 ### `yarn start`
 
-Runs the server normally.
+Runs the server normally.\
 Open [http://localhost:5000](http://localhost:5000) to view it in the browser.
 
 ### `yarn run dev`
