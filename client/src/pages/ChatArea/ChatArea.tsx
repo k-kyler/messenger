@@ -96,6 +96,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
     const [previewImageSrc, setPreviewImageSrc] = useState("");
     const [previewVideoSrc, setPreviewVideoSrc] = useState("");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [checkJoin, setCheckJoin] = useState(false);
 
     const SERVER_URL: string = "https://messimple-server-05.herokuapp.com/";
     // const SERVER_URL: string = "http://localhost:5000";
@@ -199,6 +200,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
         );
         socket.on("User id", (userId: string) => {
             setUserId(userId);
+            setCheckJoin(true);
         });
 
         return () => {
@@ -277,6 +279,7 @@ const ChatArea: FC<IChatArea> = ({ match }) => {
 
                             <Tooltip title="Room members" placement="top">
                                 <IconButton
+                                    disabled={!checkJoin}
                                     onClick={openUsersListHandler}
                                     className="chatArea__usersList"
                                 >
