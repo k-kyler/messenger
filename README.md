@@ -2,9 +2,9 @@
 
 This project was developed by React.js, TypeScript, Node.js, Socket.io and Material UI.
 
-## Available Scripts
+## Client scripts
 
-In the project directory, you can run:
+In client directory, you can run:
 
 ### `yarn start`
 
@@ -39,8 +39,19 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+## Server scripts
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+In server directory, you can run:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### `yarn start`
+
+Runs the server normally.
+Open [http://localhost:5000](http://localhost:5000) to view it in the browser.
+
+### `yarn run dev`
+
+Runs the server in the development mode.\
+Open [http://localhost:5000](http://localhost:5000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
