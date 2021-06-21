@@ -1,6 +1,6 @@
 # Messimple
 
-Realtime web chat with cool features, it can send message, upload image and video, view online users in specific room. In this project, I have been using a JavaScript method called URL.createObjectURL for creating the simple functionalities of uploading image and video. Also that, I have used React emoji picker for adding emoji to the message.
+Realtime web chat with simple features, it can send message, upload image and video, view online users in specific room. In this project, I have been using a JavaScript method called URL.createObjectURL for creating the simple functionalities of uploading image and video. Also that, I have used React emoji picker for adding emoji to the message.
 
 ## Client scripts
 
