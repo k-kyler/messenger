@@ -1,6 +1,6 @@
 # Messimple
 
-This project was developed by React.js, TypeScript, Node.js, Socket.io and Material UI.
+Simple realtime web chat implemented with Socket.io, it can send message, upload image and video, view online users in specific room. In this project, I have been using a JavaScript method called URL.createObjectURL for creating the simple functionalities of uploading image and video. Also that, I have used React emoji picker for adding emoji to the message.
 
 ## Client scripts
 
